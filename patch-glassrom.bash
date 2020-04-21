@@ -90,7 +90,7 @@ archs=(
 	arm64
 	x86
 )
-for i in $(archs[@])
+for i in ${archs[@]}
 do
 	cd "$i"
 	curl -fsSL https://github.com/bromite/bromite/releases/download/81.0.4044.106/"$i"_SystemWebView.apk  > webview.apk
