@@ -5,41 +5,41 @@ set -e
 source build/envsetup.sh
 # projects we can simply git pull
 repos=(
-https://github.com/GlassROM/android_vendor_lineage
-https://github.com/GlassROM/android_frameworks_base
-https://github.com/GlassROM/android_packages_apps_LineageParts
-https://github.com/GlassROM/android_system_core
-https://github.com/GlassROM/android_packages_apps_Settings
-https://github.com/GlassROM/android_build_make
-https://github.com/GlassROM/android_packages_apps_Bluetooth
-https://github.com/GlassROM/android_system_bt
-https://github.com/GlassROM/android_bionic
-https://github.com/GlassROM/android_external_openssh
-https://github.com/GlassROM/android_system_sepolicy
-https://github.com/GlassROM/android_build_soong
-https://github.com/GlassROM/android_libcore
-https://github.com/GlassROM/android_system_extras
-https://github.com/GlassROM/android_external_conscrypt
-https://github.com/GlassROM/android_art
-https://github.com/GlassROM/android_packages_apps_Nfc
-https://github.com/GlassROM/android_bootable_recovery
-https://github.com/GlassROM/android_external_e2fsprogs
+	https://github.com/GlassROM/android_vendor_lineage
+	https://github.com/GlassROM/android_frameworks_base
+	https://github.com/GlassROM/android_packages_apps_LineageParts
+	https://github.com/GlassROM/android_system_core
+	https://github.com/GlassROM/android_packages_apps_Settings
+	https://github.com/GlassROM/android_build_make
+	https://github.com/GlassROM/android_packages_apps_Bluetooth
+	https://github.com/GlassROM/android_system_bt
+	https://github.com/GlassROM/android_bionic
+	https://github.com/GlassROM/android_external_openssh
+	https://github.com/GlassROM/android_system_sepolicy
+	https://github.com/GlassROM/android_build_soong
+	https://github.com/GlassROM/android_libcore
+	https://github.com/GlassROM/android_system_extras
+	https://github.com/GlassROM/android_external_conscrypt
+	https://github.com/GlassROM/android_art
+	https://github.com/GlassROM/android_packages_apps_Nfc
+	https://github.com/GlassROM/android_bootable_recovery
+	https://github.com/GlassROM/android_external_e2fsprogs
 )
 for i in ${repos[@]}
 do
-# for readability
-# first discard the first 36 bytes (upto .*android_)
-j=$(echo "$i" | dd bs=1 skip=36)
-# convert underscores to forward slashes
-j=$(echo "$j" | sed -e "s|_|/|g")
-# make sure we are in compile root/build top
-croot
-# enter the directory computed in j previously
-cd "$j"
-# pull the repo from the array (in i). Don't launch editor as this will open
-# too many confirmation windows
-git reset --hard
-git pull "$i" lineage-17.1 --no-edit
+	# for readability
+	# first discard the first 36 bytes (upto .*android_)
+	j=$(echo "$i" | dd bs=1 skip=36)
+	# convert underscores to forward slashes
+	j=$(echo "$j" | sed -e "s|_|/|g")
+	# make sure we are in compile root/build top
+	croot
+	# enter the directory computed in j previously
+	cd "$j"
+	# pull the repo from the array (in i). Don't launch editor as this will open
+	# too many confirmation windows
+	git reset --hard
+	git pull "$i" lineage-17.1 --no-edit
 done
 
 # clone
@@ -83,13 +83,20 @@ croot
 # remove packages we don't need
 rm -rf packages/apps/AudioFX
 
-#Eleven 
-repopick 268524 # Disable proguard obsfuscation for eleven
-
 # Bromite
-cd external/chromium-webview/prebuilt/arm64
-curl -fsSL https://github.com/bromite/bromite/releases/download/81.0.4044.83/arm64_SystemWebView.apk > webview.apk
-git add webview.apk
+cd external/chromium-webview/prebuilt
+archs=(
+	arm
+	arm64
+	x86
+)
+for i in $(archs[@])
+do
+	cd "$i"
+	curl -fsSL https://github.com/bromite/bromite/releases/download/81.0.4044.106/"$i"_SystemWebView.apk  > webview.apk
+	cd ..
+done
+git add .
 git commit -m "add bromite" --no-edit || true
 croot
 
