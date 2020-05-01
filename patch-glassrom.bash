@@ -24,6 +24,8 @@ repos=(
 	https://github.com/GlassROM/android_packages_apps_Nfc
 	https://github.com/GlassROM/android_bootable_recovery
 	https://github.com/GlassROM/android_external_e2fsprogs
+	https://github.com/GlassROM/android_system_bpf
+	https://github.com/GlassROM/android_frameworks_native
 )
 for i in ${repos[@]}
 do
