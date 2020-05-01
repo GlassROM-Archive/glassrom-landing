@@ -27,8 +27,7 @@ repos=(
 	https://github.com/GlassROM/android_system_bpf
 	https://github.com/GlassROM/android_frameworks_native
 )
-for i in ${repos[@]}
-do
+for i in ${repos[@]}; do
 	# for readability
 	# first discard the first 36 bytes (upto .*android_)
 	j=$(echo "$i" | dd bs=1 skip=36)
@@ -92,10 +91,9 @@ archs=(
 	arm64
 	x86
 )
-for i in ${archs[@]}
-do
+for i in ${archs[@]}; do
 	cd "$i"
-	curl -fsSL https://github.com/bromite/bromite/releases/download/81.0.4044.127/"$i"_SystemWebView.apk > webview.apk
+	curl -fsSL https://github.com/bromite/bromite/releases/download/81.0.4044.127/"$i"_SystemWebView.apk >webview.apk
 	cd ..
 done
 git add .
