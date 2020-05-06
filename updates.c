@@ -50,25 +50,22 @@ int main(int argc, char **argv) {
       updates,
       "{\n  \"response\": [\n    {\n%s\"datetime\": %lu,\n%s\"filename\": "
       "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"nightly\",\n%s\"size\": "
-      "%lld,\n%s\"url\": \"%s/%s\",\n%s\"version\": \"17.1\"\n    }\n  ]\n}\n",
+      "%lld,\n%s\"url\": \"%s/%s\",\n%s\"version\": \"17.1\"\n    },\n",
       five_spaces, a, five_spaces, name, five_spaces, getuuid(update_id),
       five_spaces, five_spaces, size, five_spaces, link, name, five_spaces);
 
   uuid_generate_random(temp_update_id);
   uuid_unparse_lower(temp_update_id, update_id);
 
-  fclose(updates);
-  updates = fopen("updates_inc.json", "a");
-
   fprintf(
       updates,
-      "{\n  \"response\": [\n    {\n%s\"datetime\": %lu,\n%s\"filename\": "
+      "    {\n%s\"datetime\": %lu,\n%s\"filename\": "
       "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"nightly\",\n%s\"size\": "
       "%lld,\n%s\"url\": \"%s/%s\",\n%s\"version\": \"17.1\"\n    }\n  ]\n}\n",
-      five_spaces, a, five_spaces, name, five_spaces, getuuid(update_id),
+      five_spaces, a, five_spaces, name1, five_spaces, getuuid(update_id),
       five_spaces, five_spaces, size1, five_spaces, link, name1, five_spaces);
   fclose(updates);
-  printf("files are written to updates.json and updates_inc.json\n");
+  printf("check updates.json\n");
 }
 
 char *getuuid(char *uuid) {
