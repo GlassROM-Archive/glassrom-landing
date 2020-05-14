@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
   fprintf(
       updates,
       "{\n  \"response\": [\n    {\n%s\"datetime\": %lu,\n%s\"filename\": "
-      "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"nightly\",\n%s\"size\": "
+      "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"unofficial\",\n%s\"size\": "
       "%lld,\n%s\"url\": \"%s/%s\",\n%s\"version\": \"17.1\"\n    },\n",
       five_spaces, a, five_spaces, name, five_spaces, getuuid(update_id),
       five_spaces, five_spaces, size, five_spaces, link, name, five_spaces);
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
   fprintf(
       updates,
       "    {\n%s\"datetime\": %lu,\n%s\"filename\": "
-      "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"nightly\",\n%s\"size\": "
+      "\"%s\",\n%s\"id\": \"%s\",\n%s\"romtype\": \"unofficial\",\n%s\"size\": "
       "%lld,\n%s\"url\": \"%s/%s\",\n%s\"version\": \"17.1\"\n    }\n  ]\n}\n",
       five_spaces, a, five_spaces, name1, five_spaces, getuuid(update_id),
       five_spaces, five_spaces, size1, five_spaces, link, name1, five_spaces);
