@@ -36,8 +36,10 @@ int main(int argc, char **argv) {
 
   // get information about full OTA
   printf("Enter file name for full OTA. must have no spaces, 199 chars max ");
-  // the void cast here is to fix a clang warning
+  // flush stdin to avoid a bug where fgets just scans the previous input if it
+  // is too large
   fflush(stdin);
+  // the void cast here is to fix a clang warning
   (void)fgets(name, 200, stdin);
   // strip trailing newline
   name[strcspn(name, "\n")] = 0;
