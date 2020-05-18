@@ -37,28 +37,33 @@ int main(int argc, char **argv) {
   // get information about full OTA
   printf("Enter file name for full OTA. must have no spaces, 199 chars max ");
   // the void cast here is to fix a clang warning
+  fflush(stdin);
   (void)fgets(name, 200, stdin);
   // strip trailing newline
   name[strcspn(name, "\n")] = 0;
 
   printf("Enter file size in bytes. use wc -c <update.zip to find this. values "
          "above 100 GB are not allowed ");
+  fflush(stdin);
   (void)fgets(temp, 12, stdin);
   size = (unsigned long long)strtoll(temp, NULL, 10);
 
   printf("Enter file name for incremental OTA. must have no spaces, 199 chars "
          "max ");
+  fflush(stdin);
   (void)fgets(name1, 200, stdin);
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
   printf("Enter file size in bytes. use wc -c <update.zip to find this. values "
          "above 100 GB are not allowed ");
+  fflush(stdin);
   (void)fgets(temp, 12, stdin);
   size1 = (unsigned long long)strtoll(temp, NULL, 10);
 
   printf("Enter base download link without a trailing slash. The filename will "
          "be appended to this ");
+  fflush(stdin);
   (void)fgets(link, 500, stdin);
   link[strcspn(link, "\n")] = 0;
 
