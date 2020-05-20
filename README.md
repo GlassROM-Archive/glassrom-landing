@@ -14,7 +14,7 @@ to undo just repo sync again
 
 use either gcc or clang
 
-clang -luuid updates.c
+clang -lreadline -luuid updates.c
 
 run it:
 
