@@ -21,11 +21,11 @@ int main(int argc, char **argv) {
               *temp1 = NULL;
   // base download link where both full and incremental zip are stored
   // size is the size of the full OTA. size1 is the size of the incremental OTA
-  unsigned long long size, size1;
+  static unsigned long long size, size1;
   // this is used to safely accept user input for the size variables
   // spaces are needed for fornatting and since this is needed often keep a
   // const variable for it
-  const char five_spaces[] = "     ";
+  static const char five_spaces[] = "     ";
 
   char *update_id = malloc(37);
 
@@ -42,7 +42,8 @@ int main(int argc, char **argv) {
       "above 100 GB are not allowed\n");
   size = (unsigned long long)strtoll(temp, NULL, 10);
 
-  name1 = readline("Enter file name for incremental OTA. must have no spaces\n");
+  name1 =
+      readline("Enter file name for incremental OTA. must have no spaces\n");
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
@@ -113,7 +114,7 @@ free:
 
 static char *getuuid(char *update_id) {
   // the variable we use to store the uuid in the binary representation
-  uuid_t temp_update_id;
+  static uuid_t temp_update_id;
   // generate uuid
   uuid_generate_random(temp_update_id);
   // convert the generated uuid from binary to text (lowercase)
