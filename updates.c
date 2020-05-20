@@ -71,8 +71,11 @@ int main(int argc, char **argv) {
 
   // if size is 0 then user did not enter a valid number and if size1
   // (incremental size) > size (full size) something is wrong
-  if (size == 0 || size1 == 0 || size1 > size)
+  if (size == 0 || size1 == 0 || size1 > size) {
+    fclose(updates);
+    updates = NULL;
     return printf("invalid size. exiting");
+  }
 
   // write full OTA information to file
   fprintf(
@@ -97,6 +100,7 @@ int main(int argc, char **argv) {
       five_spaces, five_spaces, size1, five_spaces, link, name1, five_spaces);
   // close the file
   fclose(updates);
+  updates = NULL;
   printf("check updates.json\n");
 }
 
