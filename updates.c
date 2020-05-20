@@ -1,4 +1,8 @@
 #include <stdio.h>
+// clang-format puts this above stdio.h
+// this is an error. stdio.h should be included before readline
+#include <readline/history.h>
+#include <readline/readline.h>
 #include <stdlib.h>
 #include <string.h>
 #include <uuid/uuid.h>
@@ -11,18 +15,17 @@ int main(int argc, char **argv) {
   // this variable holds our timestamp
   unsigned long a = (unsigned long)time(NULL);
   // name stores the name of the full zip. name1 stores the name of the
-  // incremental zip
-  static char name[200], name1[200];
+  // incremental zip. Link stores a base URI from where both files can be
+  // acccessed. The code will always assume both files are in the same directory
+  static char *name = NULL, *name1 = NULL, *link = NULL, *temp = NULL;
   // a random number
   char update_id[37];
   // base download link where both full and incremental zip are stored
-  char link[500];
   // size is the size of the full OTA. size1 is the size of the incremental OTA
   unsigned long long size, size1;
   // the variable we use to store the uuid in the binary representation
   uuid_t temp_update_id;
   // this is used to safely accept user input for the size variables
-  char temp[12];
   // spaces are needed for fornatting and since this is needed often keep a
   // const variable for it
   const char five_spaces[] = "     ";
@@ -35,46 +38,45 @@ int main(int argc, char **argv) {
   FILE *updates = fopen("updates.json", "a");
 
   // get information about full OTA
-  printf("Enter file name for full OTA. must have no spaces, 199 chars max ");
-  // flush stdin to avoid a bug where fgets just scans the previous input if it
-  // is too large
-  fflush(stdin);
-  // the void cast here is to fix a clang warning
-  (void)fgets(name, 200, stdin);
+  name = readline("Enter file name for full OTA. must have no spaces ");
   // strip trailing newline
   name[strcspn(name, "\n")] = 0;
 
-  printf("Enter file size in bytes. use wc -c <update.zip to find this. values "
-         "above 100 GB are not allowed ");
-  fflush(stdin);
-  (void)fgets(temp, 12, stdin);
+  temp = readline(
+      "Enter file size in bytes. use wc -c <update.zip to find this. values "
+      "above 100 GB are not allowed ");
   size = (unsigned long long)strtoll(temp, NULL, 10);
 
-  printf("Enter file name for incremental OTA. must have no spaces, 199 chars "
-         "max ");
-  fflush(stdin);
-  (void)fgets(name1, 200, stdin);
+  name1 = readline(
+      "Enter file name for incremental OTA. must have no spaces, 199 chars "
+      "max ");
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
-  printf("Enter file size in bytes. use wc -c <update.zip to find this. values "
-         "above 100 GB are not allowed ");
-  fflush(stdin);
-  (void)fgets(temp, 12, stdin);
+  temp = readline(
+      "Enter file size in bytes. use wc -c <update.zip to find this. values "
+      "above 100 GB are not allowed ");
   size1 = (unsigned long long)strtoll(temp, NULL, 10);
 
-  printf("Enter base download link without a trailing slash. The filename will "
-         "be appended to this ");
-  fflush(stdin);
-  (void)fgets(link, 500, stdin);
+  link = readline(
+      "Enter base download link without a trailing slash. The filename will "
+      "be appended to this ");
   link[strcspn(link, "\n")] = 0;
 
   // if size is 0 then user did not enter a valid number and if size1
   // (incremental size) > size (full size) something is wrong
   if (size == 0 || size1 == 0 || size1 > size) {
     fclose(updates);
-    updates = NULL;
-    return printf("invalid size. exiting");
+    if (temp)
+      printf("invalid size. exiting");
+    else
+      printf("Out of memory error");
+    goto free;
+  }
+
+  if (!(name && name1 && link && temp)) {
+    printf("FAILED: out of memory?");
+    goto free;
   }
 
   // write full OTA information to file
@@ -102,6 +104,19 @@ int main(int argc, char **argv) {
   fclose(updates);
   updates = NULL;
   printf("check updates.json\n");
+free:
+  updates = NULL;
+  if (name)
+    free(name);
+  if (name1)
+    free(name1);
+  if (link)
+    free(link);
+  if (temp)
+    free(temp);
+  name = name1 = link = temp = NULL;
+  rl_clear_history();
+  clear_history();
 }
 
 // we need this to remove dashes from the uuid
