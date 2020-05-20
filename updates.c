@@ -41,9 +41,7 @@ int main(int argc, char **argv) {
       "above 100 GB are not allowed ");
   size = (unsigned long long)strtoll(temp, NULL, 10);
 
-  name1 = readline(
-      "Enter file name for incremental OTA. must have no spaces, 199 chars "
-      "max ");
+  name1 = readline("Enter file name for incremental OTA. must have no spaces");
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
