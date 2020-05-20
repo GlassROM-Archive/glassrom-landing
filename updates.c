@@ -17,7 +17,8 @@ int main(int argc, char **argv) {
   // name stores the name of the full zip. name1 stores the name of the
   // incremental zip. Link stores a base URI from where both files can be
   // acccessed. The code will always assume both files are in the same directory
-  static char *name = NULL, *name1 = NULL, *link = NULL, *temp = NULL;
+  static char *name = NULL, *name1 = NULL, *link = NULL, *temp = NULL,
+              *temp1 = NULL;
   // base download link where both full and incremental zip are stored
   // size is the size of the full OTA. size1 is the size of the incremental OTA
   unsigned long long size, size1;
@@ -45,7 +46,7 @@ int main(int argc, char **argv) {
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
-  temp = readline(
+  temp1 = readline(
       "Enter file size in bytes. use wc -c <update.zip to find this. values "
       "above 100 GB are not allowed ");
   size1 = (unsigned long long)strtoll(temp, NULL, 10);
@@ -66,7 +67,7 @@ int main(int argc, char **argv) {
     goto free;
   }
 
-  if (!(name && name1 && link && temp && update_id)) {
+  if (!(name && name1 && link && temp && temp1 && update_id)) {
     printf("FAILED: out of memory?");
     goto free;
   }
@@ -101,9 +102,11 @@ free:
     free(link);
   if (temp)
     free(temp);
+  if (temp1)
+    free(temp1);
   if (update_id)
     free(update_id);
-  name = name1 = link = temp = update_id = NULL;
+  name = name1 = link = temp = temp1 = update_id = NULL;
   rl_clear_history();
   clear_history();
 }
