@@ -7,7 +7,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-char *getuuid(char *uuid);
+static char *getuuid(char *s);
 int main(int argc, char **argv) {
   // just ignore the command line arguments
   (void)argc;
@@ -18,22 +18,16 @@ int main(int argc, char **argv) {
   // incremental zip. Link stores a base URI from where both files can be
   // acccessed. The code will always assume both files are in the same directory
   static char *name = NULL, *name1 = NULL, *link = NULL, *temp = NULL;
-  // a random number
-  char update_id[37];
   // base download link where both full and incremental zip are stored
   // size is the size of the full OTA. size1 is the size of the incremental OTA
   unsigned long long size, size1;
-  // the variable we use to store the uuid in the binary representation
-  uuid_t temp_update_id;
   // this is used to safely accept user input for the size variables
   // spaces are needed for fornatting and since this is needed often keep a
   // const variable for it
   const char five_spaces[] = "     ";
 
-  // generate uuid
-  uuid_generate_random(temp_update_id);
-  // convert the generated uuid from binary to text (lowercase)
-  uuid_unparse_lower(temp_update_id, update_id);
+  char *update_id = malloc(37);
+
   // open the updates file for reading
   FILE *updates = fopen("updates.json", "a");
 
@@ -74,7 +68,7 @@ int main(int argc, char **argv) {
     goto free;
   }
 
-  if (!(name && name1 && link && temp)) {
+  if (!(name && name1 && link && temp && update_id)) {
     printf("FAILED: out of memory?");
     goto free;
   }
@@ -88,10 +82,6 @@ int main(int argc, char **argv) {
       five_spaces, a, five_spaces, name, five_spaces, getuuid(update_id),
       five_spaces, five_spaces, size, five_spaces, link, name, five_spaces);
 
-  // change the UUID for the incremental OTA
-  uuid_generate_random(temp_update_id);
-  uuid_unparse_lower(temp_update_id, update_id);
-
   // write incremental OTA details
   fprintf(
       updates,
@@ -102,7 +92,6 @@ int main(int argc, char **argv) {
       five_spaces, five_spaces, size1, five_spaces, link, name1, five_spaces);
   // close the file
   fclose(updates);
-  updates = NULL;
   printf("check updates.json\n");
 free:
   updates = NULL;
@@ -114,19 +103,27 @@ free:
     free(link);
   if (temp)
     free(temp);
-  name = name1 = link = temp = NULL;
+  if (update_id)
+    free(update_id);
+  name = name1 = link = temp = update_id = NULL;
   rl_clear_history();
   clear_history();
 }
 
-// we need this to remove dashes from the uuid
-char *getuuid(char *uuid) {
+static char *getuuid(char *update_id) {
+  // the variable we use to store the uuid in the binary representation
+  uuid_t temp_update_id;
+  // generate uuid
+  uuid_generate_random(temp_update_id);
+  // convert the generated uuid from binary to text (lowercase)
+  uuid_unparse_lower(temp_update_id, update_id);
   char *a;
-  while (strstr(uuid, "-")) {
-    a = strstr(uuid, "-");
+  // we need this to remove dashes from the uuid
+  while (strstr(update_id, "-")) {
+    a = strstr(update_id, "-");
     // randomly return a number from 0-8. why not 9? well i was bored, that's
     // why
     *a = 48 + (rand() % 9);
   }
-  return uuid;
+  return update_id;
 }
