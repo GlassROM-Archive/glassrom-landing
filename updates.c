@@ -33,27 +33,27 @@ int main(int argc, char **argv) {
   FILE *updates = fopen("updates.json", "a");
 
   // get information about full OTA
-  name = readline("Enter file name for full OTA. must have no spaces ");
+  name = readline("Enter file name for full OTA. must have no spaces\n");
   // strip trailing newline
   name[strcspn(name, "\n")] = 0;
 
   temp = readline(
       "Enter file size in bytes. use wc -c <update.zip to find this. values "
-      "above 100 GB are not allowed ");
+      "above 100 GB are not allowed\n");
   size = (unsigned long long)strtoll(temp, NULL, 10);
 
-  name1 = readline("Enter file name for incremental OTA. must have no spaces");
+  name1 = readline("Enter file name for incremental OTA. must have no spaces\n");
   name1[strcspn(name1, "\n")] = 0;
 
   // get incremental OTA details
   temp1 = readline(
       "Enter file size in bytes. use wc -c <update.zip to find this. values "
-      "above 100 GB are not allowed ");
+      "above 100 GB are not allowed\n");
   size1 = (unsigned long long)strtoll(temp, NULL, 10);
 
   link = readline(
       "Enter base download link without a trailing slash. The filename will "
-      "be appended to this ");
+      "be appended to this\n");
   link[strcspn(link, "\n")] = 0;
 
   // if size is 0 then user did not enter a valid number and if size1
@@ -61,14 +61,14 @@ int main(int argc, char **argv) {
   if (size == 0 || size1 == 0 || size1 > size) {
     fclose(updates);
     if (temp)
-      printf("invalid size. exiting");
+      printf("invalid size. exiting\n");
     else
-      printf("Out of memory error");
+      printf("Out of memory error\n");
     goto free;
   }
 
   if (!(name && name1 && link && temp && temp1 && update_id)) {
-    printf("FAILED: out of memory?");
+    printf("FAILED: out of memory?\n");
     goto free;
   }
 
