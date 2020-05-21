@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
   temp1 = readline(
       "Enter file size in bytes. use wc -c <update.zip to find this. values "
       "above 100 GB are not allowed\n");
-  size1 = (unsigned long long)strtoll(temp, NULL, 10);
+  size1 = (unsigned long long)strtoll(temp1, NULL, 10);
 
   link = readline("Enter base download link. The filename will be appended to "
                   "this. The trailing slash does not matter\n");
