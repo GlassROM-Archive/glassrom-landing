@@ -52,9 +52,8 @@ int main(int argc, char **argv) {
       "above 100 GB are not allowed\n");
   size1 = (unsigned long long)strtoll(temp, NULL, 10);
 
-  link = readline(
-      "Enter base download link without a trailing slash. The filename will "
-      "be appended to this\n");
+  link = readline("Enter base download link. The filename will be appended to "
+                  "this. The trailing slash does not matter\n");
   link[strcspn(link, "\n")] = 0;
 
   // if size is 0 then user did not enter a valid number and if size1
@@ -72,6 +71,10 @@ int main(int argc, char **argv) {
     printf("FAILED: out of memory?\n");
     goto free;
   }
+
+  // handle trailing slash in the download link
+  if (link[(strlen(link)) - 1] == '/')
+    link[(strlen(link)) - 1] = 0;
 
   // write full OTA information to file
   fprintf(
