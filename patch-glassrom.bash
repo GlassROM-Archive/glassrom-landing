@@ -107,6 +107,11 @@ cd flossprebuilts
 git pull --rebase
 croot
 
+# Allow the same build flow as grapheneos for pixel devices
+# This repo is relatively small so just delete it and redownload every time
+rm -rf script
+git clone https://github.com/GrapheneOS/script
+
 # ota hack - delete the rest of the script for a release build
 cd packages/apps/Updater
 echo 'diff --git a/AndroidManifest.xml b/AndroidManifest.xml
