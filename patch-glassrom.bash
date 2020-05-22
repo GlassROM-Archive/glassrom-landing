@@ -107,10 +107,12 @@ cd flossprebuilts
 git pull --rebase
 croot
 
-# Allow the same build flow as grapheneos for pixel devices
-# This repo is relatively small so just delete it and redownload every time
 rm -rf script
-git clone https://github.com/GrapheneOS/script
+[ -d "./script" ] || git clone https://github.com/GrapheneOS/script
+cd script
+git pull https://github.com/GlassROM-devices/script --no-edit
+git pull --no-edit
+croot
 
 # ota hack - delete the rest of the script for a release build
 cd packages/apps/Updater
@@ -182,3 +184,5 @@ index caf80c9..88e5672 100644
 ' | patch -p1
 git add .
 git commit -m "adjust for debugging" --no-edit
+
+echo "Success!"
