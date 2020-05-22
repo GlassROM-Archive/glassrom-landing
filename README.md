@@ -16,6 +16,10 @@ use either gcc or clang
 
 clang -lreadline -luuid updates.c
 
+however if you are on non-GNU
+
+clang -Dnongnu updates.c
+
 run it:
 
 ./a.out

@@ -1,11 +1,31 @@
 #include <stdio.h>
 // clang-format puts this above stdio.h
 // this is an error. stdio.h should be included before readline
+#ifndef nongnu
 #include <readline/history.h>
 #include <readline/readline.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
+#ifndef nongnu
 #include <uuid/uuid.h>
+#endif
+
+#ifdef nongnu
+static char *readline(char *s) {
+  printf("\nNote: running without readline. The limit is 499 chars\n%s", s);
+  char *a = malloc(500);
+  (void)fgets(a, 500, stdin);
+  return a;
+}
+
+static void swap(char *a, char *b);
+static int random(unsigned long length);
+
+// do nothing
+static inline void rl_clear_history() {}
+static inline void clear_history() {}
+#endif
 
 static char *getuuid(char *s);
 int main(int argc, char **argv) {
@@ -115,6 +135,7 @@ free:
   clear_history();
 }
 
+#ifndef nongnu
 static char *getuuid(char *update_id) {
   // the variable we use to store the uuid in the binary representation
   static uuid_t temp_update_id;
@@ -132,3 +153,32 @@ static char *getuuid(char *update_id) {
   }
   return update_id;
 }
+#else
+// a simple trick to get a random ID. Walk through the entire list and randomly
+// replace any element with any other element. Then get the first 36 bytes and
+// copy that into update id. Note that numbers are given higher priority so they
+// appear several times in the list
+static char *getuuid(char *update_id) {
+  char a[] =
+      "012345678900987654321qwertyuiopasdfghjklzxcvbnm123456789009876543210";
+  for (unsigned long i = 0; i < strlen(a); ++i)
+    swap(&a[i], &a[random(strlen(a))]);
+  a[36] = 0;
+  strcpy(update_id, a);
+  return update_id;
+}
+
+static void swap(char *a, char *b) {
+  static char temp;
+  temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+// This function only exists to silence a compiler warning
+static int random(unsigned long length) {
+  int a = rand();
+  a %= length;
+  return a;
+}
+#endif
