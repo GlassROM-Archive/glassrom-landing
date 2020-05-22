@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   // this is used to safely accept user input for the size variables
   // spaces are needed for fornatting and since this is needed often keep a
   // const variable for it
-  static const char five_spaces[] = "     ";
+  static const char *__restrict five_spaces = "     ";
 
   char *update_id = malloc(37);
 
