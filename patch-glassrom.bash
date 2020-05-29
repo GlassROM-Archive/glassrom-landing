@@ -93,7 +93,7 @@ archs=(
 )
 for i in ${archs[@]}; do
 	cd "$i"
-	curl -fsSL https://github.com/bromite/bromite/releases/download/83.0.4103.53/"$i"_SystemWebView.apk >webview.apk
+	curl -fsSL https://github.com/bromite/bromite/releases/download/83.0.4103.76/"$i"_SystemWebView.apk >webview.apk
 	cd ..
 done
 git add .
