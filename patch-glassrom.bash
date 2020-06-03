@@ -26,6 +26,7 @@ repos=(
 	https://github.com/GlassROM/android_external_e2fsprogs
 	https://github.com/GlassROM/android_system_bpf
 	https://github.com/GlassROM/android_frameworks_native
+	https://github.com/GlassROM/android_external_boringssl
 )
 for i in ${repos[@]}; do
 	# for readability
