@@ -27,6 +27,7 @@ repos=(
 	https://github.com/GlassROM/android_system_bpf
 	https://github.com/GlassROM/android_frameworks_native
 	https://github.com/GlassROM/android_external_boringssl
+	https://github.com/GlassROM/android_device_qcom_sepolicy
 )
 for i in ${repos[@]}; do
 	# for readability
