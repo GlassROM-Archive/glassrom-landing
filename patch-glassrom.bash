@@ -45,6 +45,11 @@ for i in ${repos[@]}; do
 	git pull "$i" lineage-17.1 --no-edit
 done
 
+# device/common
+cd device/common
+git pull https://github.com/GrapheneOS/device_common --no-edit
+croot
+
 # clone
 croot
 # hardened malloc
