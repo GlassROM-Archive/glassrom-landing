@@ -99,7 +99,7 @@ archs=(
 	arm64
 	x86
 )
-VERSION="83.0.4103.119"
+VERSION="84.0.4147.95"
 KEY="-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
 
