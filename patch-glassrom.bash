@@ -89,6 +89,11 @@ git add config/common.mk
 git commit -m "add trichrome" --no-edit || true
 croot
 
+# increase key security, 4096-bit RSA keys and better encryption for keys
+cd development
+git pull https://github.com/GrapheneOS/platform_development --no-edit
+croot
+
 # remove packages we don't need
 rm -rf packages/apps/AudioFX
 
@@ -99,7 +104,7 @@ archs=(
 	arm64
 	x86
 )
-VERSION="84.0.4147.95"
+VERSION="84.0.4147.132"
 KEY="-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
 
