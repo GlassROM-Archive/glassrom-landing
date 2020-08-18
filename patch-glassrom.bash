@@ -96,6 +96,7 @@ croot
 
 # remove packages we don't need
 rm -rf packages/apps/AudioFX
+rm -rf packages/apps/Eleven
 
 # Bromite
 cd external/chromium-webview/prebuilt
