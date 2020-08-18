@@ -91,6 +91,7 @@ croot
 
 # increase key security, 4096-bit RSA keys and better encryption for keys
 cd development
+git revert 6e3bcd86f2eaa8dd588961c756b4152ef3e8fc68 --no-edit
 git pull https://github.com/GrapheneOS/platform_development --no-edit
 croot
 
