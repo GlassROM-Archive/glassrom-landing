@@ -34,6 +34,7 @@ done
 echo "$KEY" >csagan5.asc
 gpg2 --import csagan5.asc
 gpg2 --verify brm_"$VERSION".sha256.txt.asc
+echo "WARNING WARNING WARNING. The fingerprint above MUST exactly match 8677 3D26 03BC C531 DDEA  198E 6419 0A51 D85D C0C5. If it does not, stop and revert the commit to bromite"
 
 for i in ${archs[@]}; do
 	sha256=$(cat brm_"$VERSION".sha256.txt | grep "$i"_SystemWebView.apk | awk '{ print $1}')
