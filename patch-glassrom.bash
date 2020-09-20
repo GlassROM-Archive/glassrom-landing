@@ -32,7 +32,7 @@ repos=(
 for i in ${repos[@]}; do
 	# for readability
 	# first discard the first 36 bytes (upto .*android_)
-	echo "pulling "$i"\n"
+	echo "pulling \"$i\""
 	j=$(echo "$i" | dd bs=1 skip=36)
 	# convert underscores to forward slashes
 	j=$(echo "$j" | sed -e "s|_|/|g")
