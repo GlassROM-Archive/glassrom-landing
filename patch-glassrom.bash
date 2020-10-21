@@ -49,7 +49,7 @@ done
 # device/common
 croot
 cd device/common
-git pull https://github.com/GrapheneOS/device_common 10 --no-edit
+git pull https://github.com/GrapheneOS/device_common QQ3A.200805.001.2020.09.11.14 --no-edit
 croot
 
 # clone
@@ -58,7 +58,7 @@ croot
 cd external
 [ -d "./hardened_malloc" ] || git clone https://github.com/GlassROM/hardened_malloc
 cd hardened_malloc
-git pull https://github.com/GrapheneOS/hardened_malloc 10 --no-edit
+git pull https://github.com/GrapheneOS/hardened_malloc QQ3A.200805.001.2020.09.11.14 --no-edit
 croot
 
 # trichrome
@@ -93,7 +93,7 @@ croot
 # increase key security, 4096-bit RSA keys and better encryption for keys
 cd development
 git revert 6e3bcd86f2eaa8dd588961c756b4152ef3e8fc68 --no-edit
-git pull https://github.com/GrapheneOS/platform_development 10 --no-edit
+git pull https://github.com/GrapheneOS/platform_development QQ3A.200805.001.2020.09.11.14 --no-edit
 croot
 
 # remove packages we don't need
@@ -110,10 +110,9 @@ git pull --rebase
 croot
 
 rm -rf script
-[ -d "./script" ] || git clone https://github.com/GrapheneOS/script --branch=10
+git clone https://github.com/GrapheneOS/script --branch=QQ3A.200805.001.2020.09.11.14
 cd script
-git pull https://github.com/GlassROM-devices/script --no-edit
-git pull --no-edit
+git pull https://github.com/GlassROM-devices/script 10 --no-edit
 croot
 
 # ota hack - delete the rest of the script for a release build
