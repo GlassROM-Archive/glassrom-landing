@@ -7,32 +7,94 @@ source build/envsetup.sh
 repos=(
 	https://github.com/GlassROM/android_vendor_lineage
 	https://github.com/GlassROM/android_frameworks_base
-	https://github.com/GlassROM/android_packages_apps_LineageParts
 	https://github.com/GlassROM/android_system_core
 	https://github.com/GlassROM/android_packages_apps_Settings
 	https://github.com/GlassROM/android_build_make
-	https://github.com/GlassROM/android_packages_apps_Bluetooth
-	https://github.com/GlassROM/android_system_bt
 	https://github.com/GlassROM/android_bionic
 	https://github.com/GlassROM/android_external_openssh
 	https://github.com/GlassROM/android_system_sepolicy
-	https://github.com/GlassROM/android_build_soong
-	https://github.com/GlassROM/android_libcore
-	https://github.com/GlassROM/android_system_extras
-	https://github.com/GlassROM/android_external_conscrypt
-	https://github.com/GlassROM/android_art
-	https://github.com/GlassROM/android_packages_apps_Nfc
 	https://github.com/GlassROM/android_bootable_recovery
-	https://github.com/GlassROM/android_external_e2fsprogs
-	https://github.com/GlassROM/android_system_bpf
-	https://github.com/GlassROM/android_frameworks_native
-	https://github.com/GlassROM/android_external_boringssl
-	https://github.com/GlassROM/android_device_qcom_sepolicy
+	https://github.com/GlassROM/android_build_soong
 )
-for i in ${repos[@]}; do
-	# for readability
-	# first discard the first 36 bytes (upto .*android_)
+
+# GrapheneOS platform repos we don't need to maintain forks for
+grapheneplatform=(
+	https://github.com/GrapheneOS/platform_packages_apps_Bluetooth
+	https://github.com/GrapheneOS/platform_system_bt
+	https://github.com/GrapheneOS/platform_libcore
+	https://github.com/GrapheneOS/platform_system_extras
+	https://github.com/GrapheneOS/platform_external_conscrypt
+	https://github.com/GrapheneOS/platform_art
+	https://github.com/GrapheneOS/platform_packages_apps_Nfc
+	https://github.com/GrapheneOS/platform_frameworks_native
+	https://github.com/GrapheneOS/platform_packages_services_Telephony
+	https://github.com/GrapheneOS/platform_packages_providers_DownloadProvider
+	https://github.com/GrapheneOS/platform_packages_modules_NetworkStack
+	https://github.com/GrapheneOS/platform_packages_apps_Dialer
+	https://github.com/GrapheneOS/platform_frameworks_opt_net_wifi
+	https://github.com/GrapheneOS/platform_frameworks_ex
+	https://github.com/GrapheneOS/platform_development
+)
+
+# GrapheneOS device support repos
+graphenedevices=(
+	https://github.com/GrapheneOS/device_common
+	https://github.com/GrapheneOS/device_generic_goldfish
+)
+
+# handle the exceptions
+cd packages/apps/PermissionController
+git fetch github --unshallow || :
+git fetch aosp --unshallow || :
+git pull https://github.com/GrapheneOS/platform_packages_apps_PackageInstaller 11 --no-edit
+
+croot
+cd device/qcom/sepolicy_vndr
+git pull https://github.com/GlassROM/android_device_qcom_sepolicy_vndr
+croot
+
+# Handle GrapheneOS device repos
+for i in ${graphenedevices[@]}; do
 	echo "pulling \"$i\""
+	# first discard the first 30 bytes
+	j=$(echo "$i" | dd bs=1 skip=30)
+	# convert underscores to forward slashes
+	j=$(echo "$j" | sed -e "s|_|/|g")
+	# make sure we are in compile root/build top
+	croot
+	# enter the directory computed in j previously
+	cd "$j"
+	# pull the repo from the array (in i). Don't launch editor as this will open
+	# too many confirmation windows
+	git reset --hard
+	git fetch github --unshallow || :
+	git fetch aosp --unshallow || :
+	git pull "$i" 11 --no-edit
+done
+
+# Handle GrapheneOS repos
+for i in ${grapheneplatform[@]}; do
+	echo "pulling \"$i\""
+	# first discard the first 39 bytes (upto .*platform_)
+	j=$(echo "$i" | dd bs=1 skip=39)
+	# convert underscores to forward slashes
+	j=$(echo "$j" | sed -e "s|_|/|g")
+	# make sure we are in compile root/build top
+	croot
+	# enter the directory computed in j previously
+	cd "$j"
+	# pull the repo from the array (in i). Don't launch editor as this will open
+	# too many confirmation windows
+	git reset --hard
+	git fetch github --unshallow || :
+	git fetch aosp --unshallow || :
+	git pull "$i" 11 --no-edit
+done
+
+# Handle GlassROM repos
+for i in ${repos[@]}; do
+	echo "pulling \"$i\""
+	# first discard the first 36 bytes (upto .*android_)
 	j=$(echo "$i" | dd bs=1 skip=36)
 	# convert underscores to forward slashes
 	j=$(echo "$j" | sed -e "s|_|/|g")
@@ -43,76 +105,52 @@ for i in ${repos[@]}; do
 	# pull the repo from the array (in i). Don't launch editor as this will open
 	# too many confirmation windows
 	git reset --hard
-	git pull "$i" lineage-17.1 --no-edit
+	git fetch github --unshallow || :
+	git fetch aosp --unshallow || :
+	git pull "$i" lineage-18.1 --no-edit
 done
 
-# device/common
-croot
-cd device/common
-git pull https://github.com/GrapheneOS/device_common QQ3A.200805.001.2020.09.11.14 --no-edit
-croot
+croot 
+cd kernel/configs
+git fetch github --unshallow || :
+git fetch aosp --unshallow || :
+git pull https://github.com/GrapheneOS/kernel_configs
 
 # clone
 croot
 # hardened malloc
 cd external
-[ -d "./hardened_malloc" ] || git clone https://github.com/GlassROM/hardened_malloc
-cd hardened_malloc
-git pull https://github.com/GrapheneOS/hardened_malloc QQ3A.200805.001.2020.09.11.14 --no-edit
+rm -rf ./hardened_malloc
+git clone https://github.com/GrapheneOS/hardened_malloc
 croot
 
 # trichrome
 rm -rf vendor/chromium
 cd vendor
-git clone https://github.com/GlassROM/android_vendor_chromium chromium
-cd chromium
-git pull https://github.com/GrapheneOS/platform_external_vanadium --no-edit
-cd ../lineage
-git reset config/common.mk
-git checkout config/common.mk
-echo 'diff --git a/config/common.mk b/config/common.mk
-index a5edad64..abd7c6ce 100644
---- a/config/common.mk
-+++ b/config/common.mk
-@@ -123,6 +123,10 @@ PRODUCT_PACKAGES += \
-     Exchange2 \
-     Terminal
- 
-+# Chromium packages
-+PRODUCT_PACKAGES += \
-+    TrichromeWebView
-+
- # GlassROM packages
- PRODUCT_PACKAGES += \
-     AuroraServices \
-' | patch -p1
-git add config/common.mk
-git commit -m "add trichrome" --no-edit || true
-croot
-
-# increase key security, 4096-bit RSA keys and better encryption for keys
-cd development
-git revert 6e3bcd86f2eaa8dd588961c756b4152ef3e8fc68 --no-edit
-git pull https://github.com/GrapheneOS/platform_development QQ3A.200805.001.2020.09.11.14 --no-edit
+git clone https://github.com/GrapheneOS/platform_external_vanadium --single-branch --depth=1 chromium
 croot
 
 # remove packages we don't need
 rm -rf packages/apps/AudioFX
 rm -rf packages/apps/Eleven
-
 rm -rf external/chromium-webview
+rm -rf packages/apps/Jelly
 
 #foss prebuilts
 cd vendor
-[ -d "./flossprebuilts" ] || git clone https://github.com/GlassROM/android_vendor_flossprebuilts flossprebuilts
-cd flossprebuilts
-git pull --rebase
+rm -rf ./flossprebuilts
+git clone https://github.com/GlassROM/android_vendor_flossprebuilts flossprebuilts
+rm -rf ./PdfViewer
+git clone https://github.com/GrapheneOS/platform_external_PdfViewer PdfViewer
+rm -rf ./Auditor
+git clone https://github.com/GrapheneOS/platform_external_Auditor Auditor
 croot
 
+# GlassROM build scripts
 rm -rf script
-git clone https://github.com/GrapheneOS/script --branch=QQ3A.200805.001.2020.09.11.14
+git clone https://github.com/GrapheneOS/script
 cd script
-git pull https://github.com/GlassROM-devices/script 10 --no-edit
+git pull https://github.com/GlassROM-devices/script 11 --no-edit
 croot
 
 # ota hack - delete the rest of the script for a release build
