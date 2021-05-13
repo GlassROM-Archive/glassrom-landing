@@ -50,7 +50,7 @@ git pull https://github.com/GrapheneOS/platform_packages_apps_PackageInstaller 1
 
 croot
 cd device/qcom/sepolicy_vndr
-git pull https://github.com/GlassROM/android_device_qcom_sepolicy_vndr
+git pull https://github.com/GlassROM/android_device_qcom_sepolicy_vndr --no-edit
 croot
 
 # Handle GrapheneOS device repos
